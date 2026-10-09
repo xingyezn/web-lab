@@ -1,0 +1,15 @@
+{
+  "project": "Web Lab",
+  "version": "1.0",
+  "documents": [
+    "AGENTS.md",
+    "ARCHITECTURE.md",
+    "CONTENT_SPEC.md",
+    "DATA_SCHEMA.md",
+    "DEVELOPMENT_PLAN.md",
+    "PRD.md",
+    "README.md",
+    "TASKS.md",
+    "TEST_PLAN.md"
+  ]
+}

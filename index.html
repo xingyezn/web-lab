@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Web Lab · Web 程序设计交互学习平台</title>
+  <meta name="description" content="Web Lab 是一个面向大学一年级学生的纯前端 Web 程序设计交互学习平台，通过 Learn · Try · Debug · Create 的学习循环掌握 HTML、CSS、布局、JavaScript、DOM 与数据可视化。" />
+  <meta name="theme-color" content="#1677ff" />
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg" />
+  <link rel="stylesheet" href="assets/css/variables.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/layout.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/home.css" />
+  <link rel="stylesheet" href="assets/css/course.css" />
+  <link rel="stylesheet" href="assets/css/lesson.css" />
+  <link rel="stylesheet" href="assets/css/workspace.css" />
+  <link rel="stylesheet" href="assets/css/project.css" />
+  <link rel="stylesheet" href="assets/css/practice.css" />
+  <link rel="stylesheet" href="assets/css/polish.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主内容</a>
+
+  <header class="site-header">
+    <div class="site-header__inner container">
+      <a class="brand" href="#/" aria-label="Web Lab 首页">
+        <span class="brand__logo" aria-hidden="true">&lt;/&gt;</span>
+        <span class="brand__name">Web Lab</span>
+      </a>
+
+      <div class="view-controls" role="group" aria-label="显示设置">
+        <label class="visually-hidden" for="display-mode">显示模式</label>
+        <select id="display-mode" class="view-controls__select" data-display-mode>
+          <option value="normal">普通模式</option>
+          <option value="classroom">课堂模式</option>
+          <option value="focus">专注模式</option>
+        </select>
+        <button class="view-controls__font" type="button" data-font="dec" aria-label="减小代码字号">A-</button>
+        <button class="view-controls__font" type="button" data-font="inc" aria-label="增大代码字号">A+</button>
+      </div>
+
+      <button
+        class="nav-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="site-nav"
+        aria-label="打开导航菜单"
+      >
+        <span class="nav-toggle__bar" aria-hidden="true"></span>
+        <span class="nav-toggle__bar" aria-hidden="true"></span>
+        <span class="nav-toggle__bar" aria-hidden="true"></span>
+      </button>
+
+      <nav id="site-nav" class="site-nav" aria-label="主导航">
+        <ul class="site-nav__list">
+          <li><a class="site-nav__link" data-nav-link data-route="/course" href="#/course">课程</a></li>
+          <li><a class="site-nav__link" data-nav-link data-route="/playground" href="#/playground">实验室</a></li>
+          <li><a class="site-nav__link" data-nav-link data-route="/challenge" href="#/challenge">挑战</a></li>
+          <li><a class="site-nav__link" data-nav-link data-route="/project" href="#/project">项目</a></li>
+          <li><a class="site-nav__link" data-nav-link data-route="/versions" href="#/versions">版本</a></li>
+          <li><a class="site-nav__link" data-nav-link data-route="/reference" href="#/reference">帮助</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="app-main" tabindex="-1"></main>
+
+  <footer class="site-footer">
+    <div class="container site-footer__inner">
+      <p class="site-footer__item">Web Lab · Web 程序设计交互学习平台</p>
+      <p class="site-footer__item">纯前端 · 本地进度 · 可部署到 GitHub Pages</p>
+    </div>
+  </footer>
+
+  <button class="focus-exit" type="button" data-mode-exit hidden>退出专注模式</button>
+
+  <!-- Data: static course metadata and lesson content -->
+  <script src="data/modules.js"></script>
+  <script src="data/lessons/web-foundations.js"></script>
+  <script src="data/lessons/html.js"></script>
+  <script src="data/lessons/css.js"></script>
+  <script src="data/lessons/layout.js"></script>
+  <script src="data/lessons/js.js"></script>
+  <script src="data/lessons/dom.js"></script>
+  <script src="data/lessons/chart.js"></script>
+  <script src="data/lessons/data-story.js"></script>
+  <script src="data/lessons/final.js"></script>
+  <script src="data/lessons.js"></script>
+  <script src="data/practice/challenges.js"></script>
+  <script src="data/practice/debug.js"></script>
+  <script src="data/practice.js"></script>
+  <script src="data/versions.js"></script>
+  <script src="data/reference.js"></script>
+
+  <!-- Core: shared utilities, router and runtime modules -->
+  <script src="src/utils/html.js"></script>
+  <script src="src/utils/diff.js"></script>
+  <script src="src/display-mode.js"></script>
+  <script src="src/router.js"></script>
+  <script src="src/editor/editor.js"></script>
+  <script src="src/preview/console.js"></script>
+  <script src="src/preview/preview.js"></script>
+  <script src="src/components/workspace.js"></script>
+  <script src="src/components/solver.js"></script>
+  <script src="src/components/dom-tree.js"></script>
+  <script src="src/components/css-playground.js"></script>
+  <script src="src/components/box-model-lab.js"></script>
+  <script src="src/components/flex-playground.js"></script>
+  <script src="src/components/js-demos.js"></script>
+  <script src="src/components/dom-lab.js"></script>
+  <script src="src/components/chart-lab.js"></script>
+  <script src="src/components/data-story-builder.js"></script>
+  <script src="src/storage/storage.js"></script>
+  <script src="src/progress/progress.js"></script>
+
+  <!-- Validation -->
+  <script src="src/validation/html-validator.js"></script>
+  <script src="src/validation/css-validator.js"></script>
+  <script src="src/validation/js-validator.js"></script>
+  <script src="src/validation/dom-validator.js"></script>
+  <script src="src/validation/chart-validator.js"></script>
+  <script src="src/validation/validator.js"></script>
+
+  <!-- Pages -->
+  <script src="src/pages/placeholder-page.js"></script>
+  <script src="src/pages/home-page.js"></script>
+  <script src="src/pages/course-page.js"></script>
+  <script src="src/pages/lesson-page.js"></script>
+  <script src="src/pages/playground-page.js"></script>
+  <script src="src/pages/css-playground-page.js"></script>
+  <script src="src/pages/box-model-lab-page.js"></script>
+  <script src="src/pages/flex-playground-page.js"></script>
+  <script src="src/pages/chart-lab-page.js"></script>
+  <script src="src/pages/data-story-page.js"></script>
+  <script src="src/pages/project-page.js"></script>
+  <script src="src/pages/practice-page.js"></script>
+  <script src="src/pages/versions-page.js"></script>
+  <script src="src/pages/reference-page.js"></script>
+
+  <!-- App: composition root (route table + bootstrap) -->
+  <script src="src/app.js"></script>
+</body>
+</html>

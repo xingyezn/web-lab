@@ -1,0 +1,96 @@
+/* Phase 15 polish: view controls, classroom mode, focus mode. */
+
+.view-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-left: auto;
+}
+
+.view-controls__select {
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: var(--text-sm);
+}
+
+.view-controls__font {
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  cursor: pointer;
+}
+
+.view-controls__font:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* Floating exit button, shown only in focus mode */
+.focus-exit {
+  position: fixed;
+  right: var(--space-4);
+  bottom: var(--space-4);
+  z-index: 250;
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-primary);
+  color: var(--color-primary-contrast);
+  border: 0;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-lg);
+  cursor: pointer;
+}
+
+/* Classroom mode: bigger type, bigger preview, fewer distractions */
+html[data-mode="classroom"] .editor__input {
+  font-size: calc(var(--editor-font-size, 0.9375rem) + 3px);
+}
+
+html[data-mode="classroom"] .lesson-content {
+  font-size: 1.0625rem;
+}
+
+html[data-mode="classroom"] .lesson-block__title,
+html[data-mode="classroom"] .page-header__title {
+  font-size: 2rem;
+}
+
+html[data-mode="classroom"] .site-footer,
+html[data-mode="classroom"] .workspace-tools {
+  display: none;
+}
+
+html[data-mode="classroom"] .preview__frame {
+  height: 420px;
+}
+
+/* Focus mode: keep only the work area */
+html[data-mode="focus"] .site-header,
+html[data-mode="focus"] .site-footer,
+html[data-mode="focus"] .lesson-sidebar,
+html[data-mode="focus"] .workspace-tools,
+html[data-mode="focus"] .lesson-complete {
+  display: none;
+}
+
+html[data-mode="focus"] .lesson-layout {
+  grid-template-columns: 1fr;
+}
+
+html[data-mode="focus"] .lesson {
+  padding-top: var(--space-4);
+}
+
+html[data-mode="focus"] .preview__frame {
+  height: 460px;
+}
+
+@media (max-width: 720px) {
+  .view-controls__select {
+    max-width: 108px;
+  }
+}
