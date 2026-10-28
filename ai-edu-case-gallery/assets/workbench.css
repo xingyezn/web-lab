@@ -1,0 +1,19 @@
+/* Local and online workbench case versions */
+.workbench-nav{display:flex;flex-wrap:wrap;gap:12px;margin:0 0 24px}
+.workbench-nav a{flex:1;text-align:center}
+.workbench-overview p,.workbench-version>p{color:var(--muted);font-size:15px}
+.workbench-compare table{min-width:0;table-layout:fixed}.workbench-compare th{white-space:normal}.workbench-compare th:first-child{width:22%}.workbench-compare th,.workbench-compare td{overflow-wrap:anywhere}
+.workbench-version{scroll-margin-top:90px}.workbench-version h2{font-size:23px}
+.workbench-version h3{font-size:17px;margin-top:24px}
+.workbench-version .prompt-text{font-size:16px;line-height:1.9}
+.workbench-version .prompt-head{margin-top:24px;align-items:center;flex-wrap:wrap}
+.workbench-version .prompt-head h3{margin:0}
+.workbench-version .prompt-foot{margin-top:16px}
+.workbench-extra{margin-top:20px}.workbench-extra .text-body .actions{margin-bottom:16px}
+.workbench-extra .plain-text{font-size:15px}
+.workbench-publish .howto{margin-bottom:22px}
+.workbench-pictures{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:16px}
+.workbench-pictures .figure{margin:0}.workbench-pictures a{display:block;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--paper)}
+.workbench-pictures img{width:100%;height:180px;object-fit:contain;display:block}
+.workbench-source{font-size:12px;color:var(--muted)}
+@media(max-width:740px){.workbench-nav a{font-size:14px;padding:10px 8px}.workbench-pictures{grid-template-columns:1fr}.workbench-version h2{font-size:21px}.workbench-version .prompt-text{font-size:15px}.workbench-version .prompt-head button{width:100%}.workbench-compare th,.workbench-compare td{font-size:12px;padding:9px 6px}}
