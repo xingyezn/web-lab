@@ -5,3 +5,89 @@ document.addEventListener('click',async e=>{const b=e.target.closest('[data-copy
 document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>b.closest('dialog').close()));document.getElementById('manual-select')?.addEventListener('click',()=>{area.focus();area.select()});
 const search=document.getElementById('case-search'),rows=[...document.querySelectorAll('[data-resource]')],filters=[...document.querySelectorAll('[data-filter]')];let group='全部';function filter(){let count=0;const q=(search?.value||'').trim().toLowerCase();rows.forEach(r=>{const visible=(group==='全部'||r.dataset.group===group)&&r.dataset.search.toLowerCase().includes(q);r.hidden=!visible;if(visible)count++});const empty=document.getElementById('no-results');if(empty)empty.hidden=count>0;const result=document.getElementById('result-count');if(result)result.textContent='共 '+count+' 个案例'}search?.addEventListener('input',filter);filters.forEach(b=>b.addEventListener('click',()=>{group=b.dataset.filter;filters.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));filter()}));document.getElementById('clear-search')?.addEventListener('click',()=>{search.value='';group='全部';filters.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.filter==='全部')));filter();search.focus()});
 })();
+
+
+// Share the published gallery from any case page, including local previews.
+(() => {
+  'use strict';
+  const topbar = document.querySelector('.topbar');
+  if (!topbar) return;
+
+  const siteUrl = 'https://xingyezn.github.io/web-lab/ai-edu-case-gallery/';
+  const scriptUrl = document.currentScript.src;
+  const qrUrl = new URL('site-qr.png', scriptUrl).href;
+  const actions = document.createElement('div');
+  actions.className = 'share-actions';
+  const officialLink = topbar.querySelector('.external');
+  if (officialLink) actions.append(officialLink);
+
+  const trigger = document.createElement('button');
+  trigger.type = 'button';
+  trigger.className = 'share-trigger';
+  trigger.setAttribute('aria-label', '分享网站，查看二维码');
+  trigger.setAttribute('aria-haspopup', 'dialog');
+  trigger.setAttribute('aria-controls', 'site-share');
+  trigger.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h6v6H3z M15 3h6v6h-6z M3 15h6v6H3z M15 15h2v2h-2z M21 15v6h-6 M12 3v3 M3 12h3 M12 12h4 M12 18v3"/></svg><span>分享<span class="share-label-extra">网站</span></span>';
+  actions.append(trigger);
+  topbar.append(actions);
+
+  const dialog = document.createElement('dialog');
+  dialog.id = 'site-share';
+  dialog.className = 'share-dialog';
+  dialog.setAttribute('aria-labelledby', 'site-share-title');
+  dialog.setAttribute('aria-describedby', 'site-share-description');
+  dialog.innerHTML = `
+    <div class="dialog-top">
+      <h2 id="site-share-title">分享AI应用案例库</h2>
+      <button type="button" class="share-close" autofocus>关闭</button>
+    </div>
+    <p id="site-share-description">用微信或手机相机扫码，打开案例网站。</p>
+    <div class="share-qr"><img src="${qrUrl}" width="492" height="492" alt="AI应用案例库网站二维码，下方可复制同一网址"></div>
+    <label class="share-url-label" for="site-share-url">网站链接</label>
+    <input id="site-share-url" class="share-url" type="url" readonly value="${siteUrl}" spellcheck="false">
+    <div class="share-buttons">
+      <button type="button" class="primary" id="site-share-copy">复制链接</button>
+      <a class="button" href="${qrUrl}" download="AI应用案例库-分享二维码.png">保存二维码</a>
+    </div>
+    <p class="share-status" role="status" aria-live="polite"></p>`;
+  document.body.append(dialog);
+
+  const link = dialog.querySelector('.share-url');
+  const copy = dialog.querySelector('#site-share-copy');
+  const status = dialog.querySelector('.share-status');
+  let resetTimer;
+  trigger.addEventListener('click', () => {
+    clearTimeout(resetTimer);
+    copy.textContent = '复制链接';
+    status.textContent = '';
+    dialog.showModal();
+  });
+  dialog.querySelector('.share-close').addEventListener('click', () => dialog.close());
+  dialog.addEventListener('click', event => {
+    if (event.target !== dialog) return;
+    const box = dialog.getBoundingClientRect();
+    if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) dialog.close();
+  });
+  dialog.addEventListener('close', () => trigger.focus({preventScroll: true}));
+  link.addEventListener('click', () => link.select());
+
+  copy.addEventListener('click', async () => {
+    let copied = false;
+    try {
+      await navigator.clipboard.writeText(siteUrl);
+      copied = true;
+    } catch {
+      link.focus();
+      link.select();
+      try { copied = document.execCommand('copy'); } catch {}
+    }
+    if (copied) {
+      copy.textContent = '已复制';
+      status.textContent = '链接已复制，可以粘贴分享。';
+      clearTimeout(resetTimer);
+      resetTimer = setTimeout(() => { copy.textContent = '复制链接'; }, 1800);
+    } else {
+      status.textContent = '已选中网址，请长按复制，或按Ctrl+C复制。';
+    }
+  });
+})();
