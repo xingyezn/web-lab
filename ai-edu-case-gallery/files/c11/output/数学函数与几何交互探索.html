@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数学函数与几何交互探索</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Microsoft YaHei', '微软雅黑', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+        }
+        .container { max-width: 1100px; margin: 0 auto; }
+
+        /* 头部 */
+        .header {
+            text-align: center;
+            color: #fff;
+            padding: 30px 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 24px;
+        }
+        .header h1 { font-size: 28px; margin-bottom: 8px; }
+        .header p { font-size: 14px; opacity: 0.9; }
+
+        /* 标签页导航 */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 12px 24px;
+            border: none;
+            background: rgba(255,255,255,0.85);
+            color: #555;
+            border-radius: 10px 10px 0 0;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .tab-btn:hover { background: rgba(255,255,255,1); }
+        .tab-btn.active {
+            background: #fff;
+            color: #5b6ab8;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* 内容区 */
+        .content {
+            background: #fff;
+            border-radius: 0 12px 16px 16px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            min-height: 500px;
+        }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* 二次函数区 */
+        .quad-section { display: flex; gap: 24px; flex-wrap: wrap; }
+        .canvas-wrapper {
+            flex: 1;
+            min-width: 400px;
+            background: #f8f9fc;
+            border-radius: 12px;
+            padding: 16px;
+            border: 2px solid #e8ecf5;
+        }
+        canvas { display: block; margin: 0 auto; }
+        .controls {
+            width: 280px;
+            background: #f8f9fc;
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid #e8ecf5;
+        }
+        .control-group { margin-bottom: 18px; }
+        .control-group label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 600;
+            color: #5b6ab8;
+            margin-bottom: 6px;
+        }
+        .control-group .value {
+            background: #5b6ab8;
+            color: #fff;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 13px;
+        }
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #d0d5e8;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #5b6ab8;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+
+        /* 属性显示 */
+        .properties {
+            margin-top: 16px;
+            padding: 16px;
+            background: #fff;
+            border-radius: 10px;
+            border: 2px solid #e8ecf5;
+        }
+        .properties h4 { color: #5b6ab8; margin-bottom: 12px; font-size: 15px; }
+        .prop-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px dashed #e0e5f0;
+            font-size: 13px;
+        }
+        .prop-row:last-child { border-bottom: none; }
+        .prop-label { color: #777; }
+        .prop-value { font-weight: 600; color: #333; }
+
+        /* 公式显示 */
+        .formula-display {
+            text-align: center;
+            font-size: 20px;
+            font-family: 'Georgia', serif;
+            color: #333;
+            margin: 16px 0;
+            padding: 12px;
+            background: #f0f3ff;
+            border-radius: 8px;
+        }
+
+        /* 几何区 */
+        .geo-section { display: flex; gap: 24px; flex-wrap: wrap; }
+        .geo-controls {
+            width: 260px;
+            background: #f8f9fc;
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid #e8ecf5;
+        }
+        .geo-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        .geo-shape-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+        .geo-shape-btn {
+            padding: 8px 16px;
+            border: 2px solid #d0d5e8;
+            background: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        .geo-shape-btn.active {
+            background: #5b6ab8;
+            color: #fff;
+            border-color: #5b6ab8;
+        }
+        .geo-properties {
+            padding: 16px;
+            background: #f8f9fc;
+            border-radius: 10px;
+            border: 2px solid #e8ecf5;
+            margin-top: 16px;
+        }
+
+        /* 测评区 */
+        .quiz-section { max-width: 700px; margin: 0 auto; }
+        .quiz-question {
+            background: #f8f9fc;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 2px solid #e8ecf5;
+        }
+        .quiz-question h4 { color: #5b6ab8; margin-bottom: 12px; }
+        .quiz-options { list-style: none; }
+        .quiz-option {
+            padding: 10px 16px;
+            margin: 8px 0;
+            border: 2px solid #e0e5f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        .quiz-option:hover { border-color: #5b6ab8; background: #f0f3ff; }
+        .quiz-option.selected { border-color: #5b6ab8; background: #e8ecff; }
+        .quiz-option.correct { border-color: #28a745; background: #d4edda; }
+        .quiz-option.wrong { border-color: #dc3545; background: #f8d7da; }
+        .quiz-feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            display: none;
+        }
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.correct { background: #d4edda; color: #155724; }
+        .quiz-feedback.wrong { background: #f8d7da; color: #721c24; }
+        .quiz-score {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #5b6ab8;
+            margin: 20px 0;
+            display: none;
+        }
+
+        /* 说明文字 */
+        .info-text {
+            padding: 14px 18px;
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #856404;
+        }
+
+        .section-title {
+            font-size: 20px;
+            color: #5b6ab8;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e8ecf5;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>数学函数与几何交互探索</h1>
+        <p>初中函数与小学几何选讲 · 等腰三角形按对称示意计算周长</p>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('quad')">二次函数探索</button>
+        <button class="tab-btn" onclick="switchTab('linear')">一次函数对比</button>
+        <button class="tab-btn" onclick="switchTab('geometry')">几何性质探究</button>
+        <button class="tab-btn" onclick="switchTab('quiz')">自我测评</button>
+    </div>
+
+    <div class="content">
+        <!-- 二次函数 -->
+        <div class="tab-panel active" id="panel-quad">
+            <div class="info-text">
+                提示：拖动下方滑块调整参数 a、b、c 的值，观察函数图像的变化。思考：参数如何影响抛物线的开口方向、开口大小、顶点位置和对称轴？
+            </div>
+            <div class="quad-section">
+                <div class="canvas-wrapper">
+                    <div class="formula-display" id="quad-formula">y = x<sup>2</sup> + 0x + 0</div>
+                    <canvas id="quad-canvas" width="480" height="400"></canvas>
+                </div>
+                <div class="controls">
+                    <h3 style="color:#5b6ab8; margin-bottom:16px;">参数控制</h3>
+                    <div class="control-group">
+                        <label>参数 a <span class="value" id="val-a">1.0</span></label>
+                        <input type="range" id="slider-a" min="-3" max="3" step="0.1" value="1" oninput="updateQuad()">
+                    </div>
+                    <div class="control-group">
+                        <label>参数 b <span class="value" id="val-b">0.0</span></label>
+                        <input type="range" id="slider-b" min="-5" max="5" step="0.1" value="0" oninput="updateQuad()">
+                    </div>
+                    <div class="control-group">
+                        <label>参数 c <span class="value" id="val-c">0.0</span></label>
+                        <input type="range" id="slider-c" min="-5" max="5" step="0.5" value="0" oninput="updateQuad()">
+                    </div>
+                    <div class="properties">
+                        <h4>函数性质</h4>
+                        <div class="prop-row"><span class="prop-label">开口方向</span><span class="prop-value" id="prop-direction">向上</span></div>
+                        <div class="prop-row"><span class="prop-label">顶点坐标</span><span class="prop-value" id="prop-vertex">(0, 0)</span></div>
+                        <div class="prop-row"><span class="prop-label">对称轴</span><span class="prop-value" id="prop-axis">x = 0</span></div>
+                        <div class="prop-row"><span class="prop-label">判别式 D</span><span class="prop-value" id="prop-disc">0</span></div>
+                        <div class="prop-row"><span class="prop-label">与x轴交点</span><span class="prop-value" id="prop-roots">(0, 0)</span></div>
+                        <div class="prop-row"><span class="prop-label">最值</span><span class="prop-value" id="prop-extreme">最小值 0</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 一次函数 -->
+        <div class="tab-panel" id="panel-linear">
+            <div class="info-text">
+                提示：调整参数 k 和 b，观察直线变化。对比一次函数与二次函数图像的差异，理解"斜率"和"截距"的几何意义。
+            </div>
+            <div class="quad-section">
+                <div class="canvas-wrapper">
+                    <div class="formula-display" id="linear-formula">y = 1.0x + 0</div>
+                    <canvas id="linear-canvas" width="480" height="400"></canvas>
+                </div>
+                <div class="controls">
+                    <h3 style="color:#5b6ab8; margin-bottom:16px;">参数控制</h3>
+                    <div class="control-group">
+                        <label>斜率 k <span class="value" id="val-k">1.0</span></label>
+                        <input type="range" id="slider-k" min="-3" max="3" step="0.1" value="1" oninput="updateLinear()">
+                    </div>
+                    <div class="control-group">
+                        <label>截距 b <span class="value" id="val-lb">0.0</span></label>
+                        <input type="range" id="slider-lb" min="-5" max="5" step="0.5" value="0" oninput="updateLinear()">
+                    </div>
+                    <div class="properties">
+                        <h4>函数性质</h4>
+                        <div class="prop-row"><span class="prop-label">函数类型</span><span class="prop-value" id="lin-type">正比例函数</span></div>
+                        <div class="prop-row"><span class="prop-label">增减性</span><span class="prop-value" id="lin-monotone">单调递增</span></div>
+                        <div class="prop-row"><span class="prop-label">与x轴交点</span><span class="prop-value" id="lin-xint">(0, 0)</span></div>
+                        <div class="prop-row"><span class="prop-label">与y轴交点</span><span class="prop-value" id="lin-yint">(0, 0)</span></div>
+                        <div class="prop-row"><span class="prop-label">倾斜角</span><span class="prop-value" id="lin-angle">45°</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 几何 -->
+        <div class="tab-panel" id="panel-geometry">
+            <div class="info-text">
+                提示：选择不同图形，拖动滑块调整参数，观察几何图形的性质变化。理解边长、角度、面积之间的关系。
+            </div>
+            <div class="geo-section">
+                <div class="controls geo-controls">
+                    <h3 style="color:#5b6ab8; margin-bottom:16px;">图形选择</h3>
+                    <div class="geo-shape-btns">
+                        <button class="geo-shape-btn active" onclick="selectShape('triangle')">等腰三角形</button>
+                        <button class="geo-shape-btn" onclick="selectShape('rectangle')">矩形</button>
+                        <button class="geo-shape-btn" onclick="selectShape('circle')">圆</button>
+                    </div>
+                    <div id="geo-params"></div>
+                </div>
+                <div class="geo-info">
+                    <canvas id="geo-canvas" width="480" height="400"></canvas>
+                    <div class="geo-properties" id="geo-properties"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 测评 -->
+        <div class="tab-panel" id="panel-quiz">
+            <div class="quiz-section">
+                <h3 class="section-title">函数与几何知识自测</h3>
+                <div id="quiz-container"></div>
+                <div class="quiz-score" id="quiz-score"></div>
+                <button onclick="submitQuiz()" style="width:100%; padding:14px; background:#5b6ab8; color:#fff; border:none; border-radius:10px; font-size:16px; cursor:pointer; margin-top:10px;">提交测评</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ========== 通用绘图工具 ==========
+function drawAxes(ctx, w, h, xRange, yRange) {
+    const ox = w / 2, oy = h / 2;
+    const scaleX = w / (xRange * 2);
+    const scaleY = h / (yRange * 2);
+
+    // 网格
+    ctx.strokeStyle = '#e8ecf5';
+    ctx.lineWidth = 1;
+    for (let x = -xRange; x <= xRange; x += 1) {
+        ctx.beginPath();
+        ctx.moveTo(ox + x * scaleX, 0);
+        ctx.lineTo(ox + x * scaleX, h);
+        ctx.stroke();
+    }
+    for (let y = -yRange; y <= yRange; y += 1) {
+        ctx.beginPath();
+        ctx.moveTo(0, oy + y * scaleY);
+        ctx.lineTo(w, oy + y * scaleY);
+        ctx.stroke();
+    }
+
+    // 坐标轴
+    ctx.strokeStyle = '#999';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(0, oy); ctx.lineTo(w, oy);
+    ctx.moveTo(ox, 0); ctx.lineTo(ox, h);
+    ctx.stroke();
+
+    // 箭头
+    ctx.fillStyle = '#999';
+    ctx.beginPath();
+    ctx.moveTo(w-2, oy); ctx.lineTo(w-12, oy-5); ctx.lineTo(w-12, oy+5); ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(ox, 2); ctx.lineTo(ox-5, 12); ctx.lineTo(ox+5, 12); ctx.fill();
+
+    // 刻度
+    ctx.fillStyle = '#aaa';
+    ctx.font = '11px Arial';
+    ctx.textAlign = 'center';
+    for (let x = -xRange + 2; x <= xRange - 2; x += 2) {
+        if (x === 0) continue;
+        ctx.fillText(x, ox + x * scaleX, oy + 14);
+    }
+    ctx.textAlign = 'right';
+    for (let y = -yRange + 2; y <= yRange - 2; y += 2) {
+        if (y === 0) continue;
+        ctx.fillText(y, ox - 5, oy - y * scaleY + 4);
+    }
+    ctx.textAlign = 'center';
+    ctx.fillText('O', ox - 10, oy + 14);
+    ctx.fillText('x', w - 10, oy - 10);
+    ctx.fillText('y', ox + 12, 12);
+
+    return { ox, oy, scaleX, scaleY };
+}
+
+// ========== 二次函数 ==========
+function updateQuad() {
+    const a = parseFloat(document.getElementById('slider-a').value);
+    const b = parseFloat(document.getElementById('slider-b').value);
+    const c = parseFloat(document.getElementById('slider-c').value);
+
+    document.getElementById('val-a').textContent = a.toFixed(1);
+    document.getElementById('val-b').textContent = b.toFixed(1);
+    document.getElementById('val-c').textContent = c.toFixed(1);
+
+    // 公式显示
+    let formula = 'y = ';
+    if (a !== 0) {
+        if (a === 1) formula += 'x<sup>2</sup>';
+        else if (a === -1) formula += '-x<sup>2</sup>';
+        else formula += a.toFixed(1) + 'x<sup>2</sup>';
+    }
+    if (b !== 0) {
+        if (b > 0 && a !== 0) formula += ' + ';
+        else if (b < 0) formula += ' - ';
+        if (Math.abs(b) !== 1 || a === 0) {
+            formula += Math.abs(b) === 1 ? '' : Math.abs(b).toFixed(1);
+        }
+        formula += 'x';
+    }
+    if (c !== 0) {
+        if (c > 0 && (a !== 0 || b !== 0)) formula += ' + ';
+        else if (c < 0) formula += ' - ';
+        formula += Math.abs(c).toFixed(1);
+    }
+    if (a === 0 && b === 0 && c === 0) formula += '0';
+    document.getElementById('quad-formula').innerHTML = formula;
+
+    // 绘图
+    const canvas = document.getElementById('quad-canvas');
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const { ox, oy, scaleX, scaleY } = drawAxes(ctx, canvas.width, canvas.height, 6, 6);
+
+    // 函数曲线
+    ctx.strokeStyle = a >= 0 ? '#e74c3c' : '#3498db';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    let first = true;
+    for (let x = -6; x <= 6; x += 0.05) {
+        const y = a * x * x + b * x + c;
+        const px = ox + x * scaleX;
+        const py = oy - y * scaleY;
+        if (py > -50 && py < canvas.height + 50) {
+            if (first) { ctx.moveTo(px, py); first = false; }
+            else ctx.lineTo(px, py);
+        } else { first = true; }
+    }
+    ctx.stroke();
+
+    // 顶点
+    if (a !== 0) {
+        const vx = -b / (2 * a);
+        const vy = a * vx * vx + b * vx + c;
+        ctx.fillStyle = '#f39c12';
+        ctx.beginPath();
+        ctx.arc(ox + vx * scaleX, oy - vy * scaleY, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#333';
+        ctx.font = '12px Arial';
+        ctx.textAlign = 'left';
+        ctx.fillText('顶点', ox + vx * scaleX + 10, oy - vy * scaleY - 8);
+    }
+
+    // 属性
+    document.getElementById('prop-direction').textContent = a > 0 ? '向上' : (a < 0 ? '向下' : '退化为直线');
+    if (a !== 0) {
+        const vx = -b / (2 * a);
+        const vy = c - b * b / (4 * a);
+        document.getElementById('prop-vertex').textContent = `(${vx.toFixed(2)}, ${vy.toFixed(2)})`;
+        document.getElementById('prop-axis').textContent = `x = ${vx.toFixed(2)}`;
+        const disc = b * b - 4 * a * c;
+        document.getElementById('prop-disc').textContent = disc.toFixed(2);
+        if (disc > 0) {
+            const r1 = (-b + Math.sqrt(disc)) / (2 * a);
+            const r2 = (-b - Math.sqrt(disc)) / (2 * a);
+            document.getElementById('prop-roots').textContent = `(${r1.toFixed(2)}, 0), (${r2.toFixed(2)}, 0)`;
+        } else if (disc === 0) {
+            const r = -b / (2 * a);
+            document.getElementById('prop-roots').textContent = `(${r.toFixed(2)}, 0)`;
+        } else {
+            document.getElementById('prop-roots').textContent = '无交点';
+        }
+        if (a > 0) document.getElementById('prop-extreme').textContent = `最小值 ${vy.toFixed(2)}`;
+        else document.getElementById('prop-extreme').textContent = `最大值 ${vy.toFixed(2)}`;
+    } else {
+        document.getElementById('prop-vertex').textContent = '无（退化为直线）';
+        document.getElementById('prop-axis').textContent = '无';
+        document.getElementById('prop-disc').textContent = '不适用';
+        document.getElementById('prop-roots').textContent = a === 0 && b === 0 ? (c === 0 ? '所有点' : '无交点') : `(${(-c/b).toFixed(2)}, 0)`;
+        document.getElementById('prop-extreme').textContent = '无最值';
+    }
+}
+
+// ========== 一次函数 ==========
+function updateLinear() {
+    const k = parseFloat(document.getElementById('slider-k').value);
+    const b = parseFloat(document.getElementById('slider-lb').value);
+
+    document.getElementById('val-k').textContent = k.toFixed(1);
+    document.getElementById('val-lb').textContent = b.toFixed(1);
+
+    let formula = 'y = ';
+    if (k === 1) formula += 'x';
+    else if (k === -1) formula += '-x';
+    else if (k === 0) formula += '0';
+    else formula += k.toFixed(1) + 'x';
+    if (b > 0) formula += ' + ' + b.toFixed(1);
+    else if (b < 0) formula += ' - ' + Math.abs(b).toFixed(1);
+    document.getElementById('linear-formula').innerText = formula;
+
+    const canvas = document.getElementById('linear-canvas');
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const { ox, oy, scaleX, scaleY } = drawAxes(ctx, canvas.width, canvas.height, 6, 6);
+
+    ctx.strokeStyle = '#e74c3c';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for (let x = -6; x <= 6; x += 0.1) {
+        const y = k * x + b;
+        const px = ox + x * scaleX;
+        const py = oy - y * scaleY;
+        if (x === -6) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+
+    // 截距点
+    ctx.fillStyle = '#f39c12';
+    ctx.beginPath();
+    ctx.arc(ox, oy - b * scaleY, 6, 0, Math.PI * 2);
+    ctx.fill();
+
+    // x轴交点
+    if (k !== 0) {
+        const x0 = -b / k;
+        ctx.beginPath();
+        ctx.arc(ox + x0 * scaleX, oy, 6, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    // 属性
+    document.getElementById('lin-type').textContent = b === 0 ? '正比例函数' : '一次函数';
+    document.getElementById('lin-monotone').textContent = k > 0 ? '单调递增' : (k < 0 ? '单调递减' : '常函数');
+    document.getElementById('lin-xint').textContent = k !== 0 ? `(${(-b/k).toFixed(2)}, 0)` : (b === 0 ? '所有点' : '无交点');
+    document.getElementById('lin-yint').textContent = `(0, ${b.toFixed(1)})`;
+    const angle = k >= 0 ? Math.atan(k) * 180 / Math.PI : 180 + Math.atan(k) * 180 / Math.PI;
+    document.getElementById('lin-angle').textContent = Math.abs(k) < 0.01 ? '0°' : `${Math.round(Math.abs(angle) > 90 ? 180 - angle : angle)}°`;
+}
+
+// ========== 几何 ==========
+let currentShape = 'triangle';
+function selectShape(shape) {
+    currentShape = shape;
+    document.querySelectorAll('.geo-shape-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(btn => { if (btn.getAttribute('onclick').includes("'" + tab + "'")) btn.classList.add('active'); });
+    setupGeoParams();
+    updateGeo();
+}
+
+function setupGeoParams() {
+    const container = document.getElementById('geo-params');
+    if (currentShape === 'triangle') {
+        container.innerHTML = `
+            <div class="control-group">
+                <label>底边 a <span class="value" id="val-tri-a">4.0</span></label>
+                <input type="range" id="slider-tri-a" min="1" max="8" step="0.5" value="4" oninput="updateGeo()">
+            </div>
+            <div class="control-group">
+                <label>高 h <span class="value" id="val-tri-h">3.0</span></label>
+                <input type="range" id="slider-tri-h" min="1" max="6" step="0.5" value="3" oninput="updateGeo()">
+            </div>
+        `;
+    } else if (currentShape === 'rectangle') {
+        container.innerHTML = `
+            <div class="control-group">
+                <label>长 a <span class="value" id="val-rect-a">5.0</span></label>
+                <input type="range" id="slider-rect-a" min="1" max="8" step="0.5" value="5" oninput="updateGeo()">
+            </div>
+            <div class="control-group">
+                <label>宽 b <span class="value" id="val-rect-b">3.0</span></label>
+                <input type="range" id="slider-rect-b" min="1" max="6" step="0.5" value="3" oninput="updateGeo()">
+            </div>
+        `;
+    } else if (currentShape === 'circle') {
+        container.innerHTML = `
+            <div class="control-group">
+                <label>半径 r <span class="value" id="val-cir-r">3.0</span></label>
+                <input type="range" id="slider-cir-r" min="1" max="5" step="0.5" value="3" oninput="updateGeo()">
+            </div>
+        `;
+    }
+}
+
+function updateGeo() {
+    const canvas = document.getElementById('geo-canvas');
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const { ox, oy, scaleX, scaleY } = drawAxes(ctx, canvas.width, canvas.height, 6, 6);
+
+    const propsDiv = document.getElementById('geo-properties');
+
+    if (currentShape === 'triangle') {
+        const a = parseFloat(document.getElementById('slider-tri-a').value);
+        const h = parseFloat(document.getElementById('slider-tri-h').value);
+        document.getElementById('val-tri-a').textContent = a.toFixed(1);
+        document.getElementById('val-tri-h').textContent = h.toFixed(1);
+
+        const halfA = a / 2;
+        // 等腰三角形顶点
+        ctx.fillStyle = 'rgba(231, 76, 60, 0.15)';
+        ctx.strokeStyle = '#e74c3c';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(ox - halfA * scaleX, oy);
+        ctx.lineTo(ox + halfA * scaleX, oy);
+        ctx.lineTo(ox, oy - h * scaleY);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // 高线
+        ctx.strokeStyle = '#f39c12';
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        ctx.moveTo(ox, oy);
+        ctx.lineTo(ox, oy - h * scaleY);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // 标注
+        ctx.fillStyle = '#333';
+        ctx.font = '13px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('a=' + a.toFixed(1), ox, oy + 18);
+        ctx.fillText('h=' + h.toFixed(1), ox + 20, oy - h * scaleY / 2);
+
+        const area = 0.5 * a * h;
+        const side = Math.sqrt(halfA * halfA + h * h);
+        const perimeter = a + 2 * side;
+
+        propsDiv.innerHTML = `
+            <h4 style="color:#5b6ab8;">等腰三角形性质</h4>
+            <div class="prop-row"><span class="prop-label">底边</span><span class="prop-value">${a.toFixed(1)}</span></div>
+            <div class="prop-row"><span class="prop-label">高</span><span class="prop-value">${h.toFixed(1)}</span></div>
+            <div class="prop-row"><span class="prop-label">腰长</span><span class="prop-value">${side.toFixed(2)}</span></div>
+            <div class="prop-row"><span class="prop-label">面积</span><span class="prop-value">${area.toFixed(2)}</span></div>
+            <div class="prop-row"><span class="prop-label">周长</span><span class="prop-value">${perimeter.toFixed(2)}</span></div>
+            <div class="prop-row"><span class="prop-label">类型</span><span class="prop-value">等腰等腰三角形</span></div>
+        `;
+    } else if (currentShape === 'rectangle') {
+        const a = parseFloat(document.getElementById('slider-rect-a').value);
+        const b = parseFloat(document.getElementById('slider-rect-b').value);
+        document.getElementById('val-rect-a').textContent = a.toFixed(1);
+        document.getElementById('val-rect-b').textContent = b.toFixed(1);
+
+        ctx.fillStyle = 'rgba(52, 152, 219, 0.15)';
+        ctx.strokeStyle = '#3498db';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.rect(ox - a/2 * scaleX, oy - b/2 * scaleY, a * scaleX, b * scaleY);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = '#333';
+        ctx.font = '13px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('a=' + a.toFixed(1), ox, oy + b/2 * scaleY + 18);
+        ctx.fillText('b=' + b.toFixed(1), ox + a/2 * scaleX + 20, oy);
+
+        const area = a * b;
+        const perimeter = 2 * (a + b);
+        const diag = Math.sqrt(a * a + b * b);
+
+        propsDiv.innerHTML = `
+            <h4 style="color:#5b6ab8;">矩形性质</h4>
+            <div class="prop-row"><span class="prop-label">长</span><span class="prop-value">${a.toFixed(1)}</span></div>
+            <div class="prop-row"><span class="prop-label">宽</span><span class="prop-value">${b.toFixed(1)}</span></div>
+            <div class="prop-row"><span class="prop-label">面积</span><span class="prop-value">${area.toFixed(2)}</span></div>
+            <div class="prop-row"><span class="prop-label">周长</span><span class="prop-value">${perimeter.toFixed(2)}</span></div>
+            <div class="prop-row"><span class="prop-label">对角线</span><span class="prop-value">${diag.toFixed(2)}</span></div>
+            <div class="prop-row"><span class="prop-label">长宽比</span><span class="prop-value">${(a/b).toFixed(2)}</span></div>
+        `;
+    } else if (currentShape === 'circle') {
+        const r = parseFloat(document.getElementById('slider-cir-r').value);
+        document.getElementById('val-cir-r').textContent = r.toFixed(1);
+
+        ctx.fillStyle = 'rgba(46, 204, 113, 0.15)';
+        ctx.strokeStyle = '#2ecc71';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.arc(ox, oy, r * scaleX, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        // 半径线
+        ctx.strokeStyle = '#f39c12';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(ox, oy);
+        ctx.lineTo(ox + r * scaleX, oy);
+        ctx.stroke();
+
+        ctx.fillStyle = '#333';
+        ctx.font = '13px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('r=' + r.toFixed(1), ox + r * scaleX / 2, oy - 8);
+
+        const area = Math.PI * r * r;
+        const circumference = 2 * Math.PI * r;
+        const diameter = 2 * r;
+
+        propsDiv.innerHTML = `
+            <h4 style="color:#5b6ab8;">圆的性质</h4>
+            <div class="prop-row"><span class="prop-label">半径</span><span class="prop-value">${r.toFixed(1)}</span></div>
+            <div class="prop-row"><span class="prop-label">直径</span><span class="prop-value">${diameter.toFixed(1)}</span></div>
+            <div class="prop-row"><span class="prop-label">周长</span><span class="prop-value">${circumference.toFixed(2)}</span></div>
+            <div class="prop-row"><span class="prop-label">面积</span><span class="prop-value">${area.toFixed(2)}</span></div>
+            <div class="prop-row"><span class="prop-label">圆周率</span><span class="prop-value">π ≈ 3.14159</span></div>
+            <div class="prop-row"><span class="prop-label">面积/周长比</span><span class="prop-value">${(area/circumference).toFixed(2)}</span></div>
+        `;
+    }
+}
+
+// ========== 测评 ==========
+const quizQuestions = [
+    {
+        q: "二次函数 y = ax² + bx + c 中，当 a > 0 时，抛物线的开口方向是？",
+        options: ["向上", "向下", "向左", "向右"],
+        answer: 0,
+        explain: "当 a > 0 时，抛物线开口向上；当 a < 0 时，开口向下。a 的正负决定开口方向。"
+    },
+    {
+        q: "二次函数 y = x² - 4x + 3 的对称轴是？",
+        options: ["x = 1", "x = 2", "x = 3", "x = 4"],
+        answer: 1,
+        explain: "对称轴公式 x = -b/(2a) = -(-4)/(2×1) = 2。"
+    },
+    {
+        q: "一次函数 y = 2x + 3 的与 y 轴的交点是？",
+        options: ["(0, 2)", "(0, 3)", "(3, 0)", "(2, 0)"],
+        answer: 1,
+        explain: "与 y 轴交点即 x=0 时 y=3，所以与 y 轴交点为 (0, 3)。"
+    },
+    {
+        q: "底边为6、高为4的等腰三角形面积是？",
+        options: ["12", "24", "10", "20"],
+        answer: 0,
+        explain: "等腰三角形面积 = 1/2 × 底 × 高 = 1/2 × 6 × 4 = 12。"
+    },
+    {
+        q: "半径为3的圆的面积约为？（π≈3.14）",
+        options: ["9.42", "18.84", "28.26", "37.68"],
+        answer: 2,
+        explain: "圆面积 = π × r² = 3.14 × 9 ≈ 28.26。"
+    },
+    {
+        q: "二次函数 y = x² - 6x + 9 的顶点坐标是？",
+        options: ["(3, 0)", "(3, 9)", "(-3, 0)", "(6, 9)"],
+        answer: 0,
+        explain: "顶点 x = -b/(2a) = 6/2 = 3，y = 9 - 18 + 9 = 0，顶点为 (3, 0)。"
+    }
+];
+
+let quizAnswers = new Array(quizQuestions.length).fill(-1);
+
+function renderQuiz() {
+    const container = document.getElementById('quiz-container');
+    let html = '';
+    quizQuestions.forEach((item, i) => {
+        html += `<div class="quiz-question">
+            <h4>${i + 1}. ${item.q}</h4>
+            <ul class="quiz-options">`;
+        item.options.forEach((opt, j) => {
+            html += `<li class="quiz-option" id="q${i}o${j}" onclick="selectQuiz(${i}, ${j})">${String.fromCharCode(65 + j)}. ${opt}</li>`;
+        });
+        html += `</ul>
+            <div class="quiz-feedback" id="feedback${i}"></div>
+        </div>`;
+    });
+    container.innerHTML = html;
+}
+
+function selectQuiz(qIdx, oIdx) {
+    quizAnswers[qIdx] = oIdx;
+    for (let j = 0; j < 4; j++) {
+        document.getElementById(`q${qIdx}o${j}`).classList.remove('selected');
+    }
+    document.getElementById(`q${qIdx}o${oIdx}`).classList.add('selected');
+    const item = quizQuestions[qIdx];
+    const feedback = document.getElementById(`feedback${qIdx}`);
+    feedback.className = 'quiz-feedback show ' + (oIdx === item.answer ? 'correct' : 'wrong');
+    feedback.textContent = (oIdx === item.answer ? '正确。' : '再想一想。正确答案：' + String.fromCharCode(65 + item.answer) + '。') + item.explain;
+
+}
+
+function submitQuiz() {
+    let score = 0;
+    quizQuestions.forEach((item, i) => {
+        const feedback = document.getElementById(`feedback${i}`);
+        feedback.classList.add('show');
+        if (quizAnswers[i] === item.answer) {
+            score++;
+            feedback.className = 'quiz-feedback show correct';
+            feedback.innerHTML = '✓ 正确！' + item.explain;
+            document.getElementById(`q${i}o${item.answer}`).classList.add('correct');
+        } else {
+            feedback.className = 'quiz-feedback show wrong';
+            if (quizAnswers[i] === -1) {
+                feedback.innerHTML = '✗ 未作答。正确答案：' + String.fromCharCode(65 + item.answer) + '. ' + item.options[item.answer] + '<br>' + item.explain;
+            } else {
+                feedback.innerHTML = '✗ 错误。正确答案：' + String.fromCharCode(65 + item.answer) + '. ' + item.options[item.answer] + '<br>' + item.explain;
+                document.getElementById(`q${i}o${quizAnswers[i]}`).classList.add('wrong');
+            }
+            document.getElementById(`q${i}o${item.answer}`).classList.add('correct');
+        }
+    });
+    const scoreDiv = document.getElementById('quiz-score');
+    scoreDiv.style.display = 'block';
+    const percent = Math.round(score / quizQuestions.length * 100);
+    let comment = '';
+    if (percent === 100) comment = '太棒了！全部正确！';
+    else if (percent >= 80) comment = '很好！基本掌握！';
+    else if (percent >= 60) comment = '及格，继续努力！';
+    else comment = '需要复习相关知识点。';
+    scoreDiv.innerHTML = `得分：${score}/${quizQuestions.length} (${percent}%)<br><span style="font-size:16px;">${comment}</span>`;
+}
+
+// ========== 标签页切换 ==========
+function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(btn => { if (btn.getAttribute('onclick').includes("'" + tab + "'")) btn.classList.add('active'); });
+    document.getElementById('panel-' + tab).classList.add('active');
+}
+
+// 初始化
+renderQuiz();
+setupGeoParams();
+updateQuad();
+updateLinear();
+updateGeo();
+</script>
+</body>
+</html>

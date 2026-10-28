@@ -1,0 +1,9 @@
+五年级英语交互课件
+知识点：What time do you…? / I…at…
+目标：认识整点和一刻、半点的简单表达，用英语描述日常作息。
+活动词组：get up、have breakfast、go to school、go to bed。
+时间表达：seven、seven fifteen、seven thirty、seven forty-five。
+课堂用法：教师投影讲解，学生上台操作，也可在自己的电脑上练习。
+希望效果：可翻页播放，尝试翻页或聚焦切换；调时钟时句子同步改变；拼句和小测有反馈。
+成果：可离线直接打开的单文件HTML。
+可以替换：My Weekend、英语语法、数学参数变化、科学变量控制等。
