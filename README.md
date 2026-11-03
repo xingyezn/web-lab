@@ -68,3 +68,13 @@ Web Lab 不以阅读教材式内容为主要学习方式，而是通过：
 - `TASKS.md`：开发任务拆分
 - `TEST_PLAN.md`：测试与验收标准
 - `DEVELOPMENT_PLAN.md`：推荐开发阶段
+
+## AI应用案例库：版权与联系
+
+本仓库的 [AI应用案例库](ai-edu-case-gallery/) 原创内容版权归 **Haoxin Xu（[xingyezn](https://github.com/xingyezn)）** 所有，© 2026。
+
+- **允许非商业学习、教学研究与交流**。复制、修改、分享时须保留署名、版权和来源，修改后须注明修改情况。
+- **禁止未经书面授权的商业使用**，包括售卖、收费培训、商业服务和付费产品集成。
+- 第三方代码、截图、商标及其他资源的权利归各自权利人所有，按原许可使用。
+- 完整条款：[案例库使用许可](ai-edu-case-gallery/LICENSE)。本声明的适用范围为案例库原创内容。
+- 联系、反馈与授权咨询：[GitHub Issues](https://github.com/xingyezn/web-lab/issues)；作者主页：[xingyezn](https://github.com/xingyezn)。

@@ -22,3 +22,6 @@
 @media(max-width:740px){.share-actions{gap:8px}.share-label-extra{display:none}.share-trigger{padding:8px 10px}.topbar{gap:8px}.top-left{gap:8px}.share-dialog{padding:20px}.share-dialog .dialog-top h2{font-size:18px}}
 @media(max-height:560px){.share-qr{width:160px;margin-bottom:12px}.share-dialog>p{margin-bottom:12px}}
 @media print{.share-actions,.share-dialog{display:none!important}}
+
+/* Copyright and contact */
+.copyright-footer{align-items:center;flex-wrap:wrap;gap:12px 24px;font-size:13px}.copyright-use{display:block;margin-top:4px}.copyright-links{display:flex;gap:20px;flex-wrap:wrap}.copyright-links a{display:inline-flex;align-items:center;min-height:44px}.legal-page{max-width:900px}.legal-page h1{font-size:30px}.legal-page h2{font-size:21px;margin:28px 0 12px}.legal-page p{font-size:16px;line-height:1.9}
